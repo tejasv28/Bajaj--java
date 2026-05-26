@@ -5,9 +5,10 @@ import com.bfhl.solution.dto.BfhlResponse;
 import com.bfhl.solution.service.BfhlService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.Map;
+import java.util.HashMap;
 
 @RestController
-@RequestMapping("/bfhl")
 public class BfhlController {
 
     private final BfhlService bfhlService;
@@ -16,7 +17,7 @@ public class BfhlController {
         this.bfhlService = bfhlService;
     }
 
-    @PostMapping
+    @PostMapping("/bfhl")
     public ResponseEntity<BfhlResponse> processData(@RequestBody BfhlRequest request) {
         if (request.getData() == null || request.getData().isEmpty()) {
             BfhlResponse err = new BfhlResponse();
@@ -24,6 +25,13 @@ public class BfhlController {
             return ResponseEntity.badRequest().body(err);
         }
         BfhlResponse response = bfhlService.processData(request);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/health")
+    public ResponseEntity<Map<String, String>> healthCheck() {
+        Map<String, String> response = new HashMap<>();
+        response.put("status", "UP");
         return ResponseEntity.ok(response);
     }
 }
